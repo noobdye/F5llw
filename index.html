@@ -1,1 +1,193 @@
-Em manutenção
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Scriepe Bux - Vendas de Robux</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      background: #f5f5f5;
+      color: #333;
+    }
+    header, footer {
+      background: #111;
+      color: white;
+      padding: 1rem;
+      text-align: center;
+    }
+    h1 { margin: 0.5em 0; }
+    .container {
+      max-width: 600px;
+      margin: 2em auto;
+      padding: 1em;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 0 10px #ccc;
+    }
+    input, button, select {
+      width: 100%;
+      padding: 10px;
+      margin: 0.5em 0;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    .admin-panel, .store {
+      display: none;
+    }
+    .creditos {
+      margin-top: 2em;
+      font-size: 0.9em;
+      color: #777;
+    }
+    .button {
+      background-color: #111;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    .button:hover {
+      background-color: #333;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Scriepe Bux - Vendas de Robux</h1>
+</header>
+
+<div class="container" id="auth-section">
+  <h2>Login / Registro</h2>
+  <input type="email" id="email" placeholder="Seu email" required>
+  <input type="password" id="password" placeholder="Sua senha" required>
+  <button class="button" onclick="login()">Entrar / Registrar</button>
+</div>
+
+<div class="container store" id="store">
+  <h2>Comprar Robux</h2>
+  <select id="quantidade">
+    <option value="250">250 Robux</option>
+    <option value="500">500 Robux</option>
+    <option value="750">750 Robux</option>
+    <option value="1000">1000 Robux</option>
+    <option value="custom">Quantidade personalizada</option>
+  </select>
+  <input type="number" id="custom" placeholder="Quantidade personalizada" style="display:none;">
+  <button class="button" onclick="comprar()">Comprar via Pix</button>
+  <button class="button" onclick="logout()">Sair da conta</button>
+  <p id="pagamento"></p>
+</div>
+
+<div class="container admin-panel" id="admin-panel">
+  <h2>Painel de Administração</h2>
+  <input id="newProduct" placeholder="Novo produto (ex: 1500 Robux)">
+  <button class="button" onclick="addProduct()">Adicionar Produto</button>
+  <ul id="productList"></ul>
+</div>
+
+<footer>
+  <p>Suporte no Discord: <a href="https://discord.gg/jYfG8MzcYD" target="_blank">discord.gg/jYfG8MzcYD</a></p>
+  <p class="creditos">© 2025 Scriepe Bux</p>
+</footer>
+
+<script>
+  let users = JSON.parse(localStorage.getItem("users") || "{}");
+  let adminEmail = localStorage.getItem("adminEmail");
+
+  function login() {
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value.trim();
+    if (!email || !password) return alert("Preencha os campos.");
+
+    if (!users[email]) {
+      users[email] = password;
+      localStorage.setItem("users", JSON.stringify(users));
+      if (!adminEmail) {
+        localStorage.setItem("adminEmail", email);
+        adminEmail = email;
+        alert("Registrado como administrador!");
+      } else {
+        alert("Registrado com sucesso!");
+      }
+    } else if (users[email] !== password) {
+      return alert("Senha incorreta.");
+    }
+
+    localStorage.setItem("loggedUser", email);
+    loadUI();
+  }
+
+  function loadUI() {
+    document.getElementById("auth-section").style.display = "none";
+    document.getElementById("store").style.display = "block";
+    const user = localStorage.getItem("loggedUser");
+    if (user === adminEmail) {
+      document.getElementById("admin-panel").style.display = "block";
+      loadProducts();
+    }
+  }
+
+  function comprar() {
+    const q = document.getElementById("quantidade").value;
+    const val = q === "custom" ? document.getElementById("custom").value : q;
+    let preco = 0;
+    if (q === "250") preco = 8;
+    else if (q === "500") preco = 16;
+    else if (q === "750") preco = 24;
+    else if (q === "1000") preco = 32;
+    else if (q === "custom") preco = (val * 0.032).toFixed(2); // Base aproximada
+
+    if (!val || val <= 0) return alert("Informe uma quantidade válida.");
+    const msg = `Chave Pix: <b>willianvss0011@gmail.com</b><br>
+                 Valor: <b>R$ ${preco}</b> para <b>${val} Robux</b><br>
+                 Envie o comprovante no nosso Discord.`;
+    document.getElementById("pagamento").innerHTML = msg;
+  }
+
+  document.getElementById("quantidade").addEventListener("change", function() {
+    document.getElementById("custom").style.display = this.value === "custom" ? "block" : "none";
+  });
+
+  function addProduct() {
+    const val = document.getElementById("newProduct").value.trim();
+    if (!val) return;
+    let products = JSON.parse(localStorage.getItem("products") || "[]");
+    products.push(val);
+    localStorage.setItem("products", JSON.stringify(products));
+    document.getElementById("newProduct").value = "";
+    loadProducts();
+  }
+
+  function loadProducts() {
+    let list = document.getElementById("productList");
+    list.innerHTML = "";
+    let products = JSON.parse(localStorage.getItem("products") || "[]");
+    products.forEach((p, i) => {
+      const li = document.createElement("li");
+      li.innerHTML = `${p} <button onclick="removeProduct(${i})">Remover</button>`;
+      list.appendChild(li);
+    });
+  }
+
+  function removeProduct(index) {
+    let products = JSON.parse(localStorage.getItem("products") || "[]");
+    products.splice(index, 1);
+    localStorage.setItem("products", JSON.stringify(products));
+    loadProducts();
+  }
+
+  function logout() {
+    localStorage.removeItem("loggedUser");
+    location.reload();
+  }
+
+  // Auto login se já estiver autenticado
+  if (localStorage.getItem("loggedUser")) {
+    loadUI();
+  }
+</script>
+
+</body>
+</html>
