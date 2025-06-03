@@ -1,181 +1,204 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <title>CordFleet Painel</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #0e0e0e;
-      color: #fff;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 20px;
-    }
-    header {
-      width: 100%;
-      text-align: center;
-      margin-bottom: 30px;
-    }
-    .container {
-      max-width: 600px;
-      width: 100%;
-      background: #1c1c1c;
-      border-radius: 10px;
-      padding: 20px;
-      box-shadow: 0 0 10px #000;
-    }
-    input[type="file"], button {
-      margin-top: 10px;
-      width: 100%;
-      padding: 10px;
-      font-size: 16px;
-      border: none;
-      border-radius: 5px;
-    }
-    button {
-      background: #5865F2;
-      color: white;
-      cursor: pointer;
-    }
-    button:hover {
-      background: #4752C4;
-    }
-    pre {
-      background: #111;
-      padding: 10px;
-      border-radius: 5px;
-      overflow-x: auto;
-    }
-  </style>
+  <meta charset="UTF-8" />
+  <title>CordFleet Painel</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #0e0e0e;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+    header {
+      width: 100%;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .container {
+      max-width: 600px;
+      width: 100%;
+      background: #1c1c1c;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 0 10px #000;
+    }
+    input[type="file"],
+    button {
+      margin-top: 10px;
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+    }
+    button {
+      background: #5865F2;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #4752C4;
+    }
+    pre {
+      background: #111;
+      padding: 10px;
+      border-radius: 5px;
+      overflow-x: auto;
+    }
+  </style>
 </head>
 <body>
-  <header>
-    <h1>CordFleet - Painel de Bots</h1>
-  </header>
-  <div class="container" id="app">
-    <div id="status">Verificando login...</div>
-  </div>
+  <header>
+    <h1>CordFleet - Painel de Bots</h1>
+  </header>
+  <div class="container" id="app">
+    <div id="status">Verificando login...</div>
+  </div>
 
-  <script>
-    const discloudToken = "eyJhbGciOiJIUzI1NiJ9.eyJpZCI6IjEwOTg3NDUzODQ4NDg4NTkyNTgiLCJrZXkiOiJhYzRmYTIzZGVjZGFkMjE3ODZlNzY3ZjNiYTk0In0.MPy6WoCQRlts4bHoVRLYyb8gqw9m6eRu3CuQFv7u_JY";
-    const clientId = '1358987708579709042';
-    const clientSecret = 'FZQWyJTmpGgBSpCfTBRd1kcGl6Xf7-XI';
-    const redirectUri = 'https://www.f5llw.shop/cordfleet';
+  <script>
+    const discloudToken =
+      "eyJhbGciOiJIUzI1NiJ9.eyJpZCI6IjEwOTg3NDUzODQ4NDg4NTkyNTgiLCJrZXkiOiJhYzRmYTIzZGVjZGFkMjE3ODZlNzY3ZjNiYTk0In0.MPy6WoCQRlts4bHoVRLYyb8gqw9m6eRu3CuQFv7u_JY";
+    const clientId = "1358987708579709042";
+    const clientSecret = "FZQWyJTmpGgBSpCfTBRd1kcGl6Xf7-XI";
+    const redirectUri = "https://f5llw.shop/cordfleet.html";
 
-    const urlParams = new URLSearchParams(window.location.search);
-    const code = urlParams.get('code');
+    const urlParams = new URLSearchParams(window.location.search);
+    const code = urlParams.get("code");
 
-    const app = document.getElementById("app");
-    const statusEl = document.getElementById("status");
+    const app = document.getElementById("app");
+    const statusEl = document.getElementById("status");
 
-    let userId = null;
+    let userId = null;
 
-    function renderPainel() {
-      app.innerHTML = `
-        <h2>Olá, usuário #${userId}</h2>
-        <p>Envie seu bot (.zip) para hospedar</p>
-        <input type="file" id="zipFile" accept=".zip" />
-        <button onclick="uploadBot()">Hospedar Bot</button>
-        <div id="botStatus"></div>
-      `;
-      checkUserBot();
-    }
+    function renderPainel() {
+      app.innerHTML = `
+        <h2>Olá, usuário #${userId}</h2>
+        <p>Envie seu bot (.zip) para hospedar</p>
+        <input type="file" id="zipFile" accept=".zip" />
+        <button onclick="uploadBot()">Hospedar Bot</button>
+        <div id="botStatus"></div>
+      `;
+      checkUserBot();
+    }
 
-    function checkUserBot() {
-      axios.get('https://api.discloud.app/v2/user/apps', {
-        headers: { Authorization: discloudToken }
-      }).then(({ data }) => {
-        const apps = data.apps.filter(app => app.userID === userId);
-        if (apps.length > 0) {
-          const bot = apps[0];
-          document.getElementById("botStatus").innerHTML = `
-            <hr>
-            <p><strong>Seu Bot:</strong> ${bot.name}</p>
-            <p>Status: ${bot.status}</p>
-            <p>RAM: ${bot.ramUsed} MB</p>
-            <button onclick="verLogs('${bot.id}')">Ver Logs</button>
-            <button onclick="reiniciarBot('${bot.id}')">Reiniciar</button>
-            <button onclick="removerBot('${bot.id}')">Remover</button>
-          `;
-        }
-      });
-    }
+    function checkUserBot() {
+      axios
+        .get("https://api.discloud.app/v2/user/apps", {
+          headers: { Authorization: discloudToken },
+        })
+        .then(({ data }) => {
+          const apps = data.apps.filter((app) => app.userID === userId);
+          if (apps.length > 0) {
+            const bot = apps[0];
+            document.getElementById("botStatus").innerHTML = `
+              <hr>
+              <p><strong>Seu Bot:</strong> ${bot.name}</p>
+              <p>Status: ${bot.status}</p>
+              <p>RAM: ${bot.ramUsed} MB</p>
+              <button onclick="verLogs('${bot.id}')">Ver Logs</button>
+              <button onclick="reiniciarBot('${bot.id}')">Reiniciar</button>
+              <button onclick="removerBot('${bot.id}')">Remover</button>
+            `;
+          }
+        });
+    }
 
-    function uploadBot() {
-      const file = document.getElementById("zipFile").files[0];
-      if (!file) return alert("Envie um arquivo ZIP!");
+    function uploadBot() {
+      const file = document.getElementById("zipFile").files[0];
+      if (!file) return alert("Envie um arquivo ZIP!");
 
-      const formData = new FormData();
-      formData.append("file", file);
+      const formData = new FormData();
+      formData.append("file", file);
 
-      axios.post('https://api.discloud.app/v2/app', formData, {
-        headers: {
-          Authorization: discloudToken,
-          "x-user-id": userId, // personalizando por user ID Discord
-          "Content-Type": "multipart/form-data"
-        }
-      }).then(() => {
-        alert("Bot hospedado com sucesso!");
-        checkUserBot();
-      }).catch(err => {
-        alert("Erro ao hospedar: " + err.response?.data?.message || err.message);
-      });
-    }
+      axios
+        .post("https://api.discloud.app/v2/app", formData, {
+          headers: {
+            Authorization: discloudToken,
+            "x-user-id": userId,
+            "Content-Type": "multipart/form-data",
+          },
+        })
+        .then(() => {
+          alert("Bot hospedado com sucesso!");
+          checkUserBot();
+        })
+        .catch((err) => {
+          alert("Erro ao hospedar: " + (err.response?.data?.message || err.message));
+        });
+    }
 
-    function verLogs(appId) {
-      axios.get(`https://api.discloud.app/v2/app/${appId}/logs`, {
-        headers: { Authorization: discloudToken }
-      }).then(({ data }) => {
-        alert("Logs:\n" + data.logs);
-      });
-    }
+    function verLogs(appId) {
+      axios
+        .get(`https://api.discloud.app/v2/app/${appId}/logs`, {
+          headers: { Authorization: discloudToken },
+        })
+        .then(({ data }) => {
+          alert("Logs:\n" + data.logs);
+        });
+    }
 
-    function reiniciarBot(appId) {
-      axios.post(`https://api.discloud.app/v2/app/${appId}/restart`, {}, {
-        headers: { Authorization: discloudToken }
-      }).then(() => alert("Bot reiniciado."));
-    }
+    function reiniciarBot(appId) {
+      axios
+        .post(`https://api.discloud.app/v2/app/${appId}/restart`, {}, {
+          headers: { Authorization: discloudToken },
+        })
+        .then(() => alert("Bot reiniciado."));
+    }
 
-    function removerBot(appId) {
-      axios.delete(`https://api.discloud.app/v2/app/${appId}`, {
-        headers: { Authorization: discloudToken }
-      }).then(() => {
-        alert("Bot removido.");
-        checkUserBot();
-      });
-    }
+    function removerBot(appId) {
+      axios
+        .delete(`https://api.discloud.app/v2/app/${appId}`, {
+          headers: { Authorization: discloudToken },
+        })
+        .then(() => {
+          alert("Bot removido.");
+          checkUserBot();
+        });
+    }
 
-    if (!code) {
-      const oauthUrl = `https://discord.com/api/oauth2/authorize?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code&scope=identify`;
-      window.location.href = oauthUrl;
-    } else {
-      axios.post('https://discord.com/api/oauth2/token', new URLSearchParams({
-        client_id: clientId,
-        client_secret: clientSecret,
-        grant_type: 'authorization_code',
-        code,
-        redirect_uri: redirectUri
-      }), {
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-      }).then(res => {
-        const accessToken = res.data.access_token;
-        return axios.get('https://discord.com/api/users/@me', {
-          headers: { Authorization: `Bearer ${accessToken}` }
-        });
-      }).then(res => {
-        userId = res.data.id;
-        renderPainel();
-      }).catch(err => {
-        console.error(err);
-        statusEl.innerText = 'Erro no login do Discord';
-      });
-    }
-  </script>
+    if (!code) {
+      const oauthUrl = `https://discord.com/api/oauth2/authorize?client_id=${clientId}&redirect_uri=${encodeURIComponent(
+        redirectUri
+      )}&response_type=code&scope=identify`;
+      window.location.href = oauthUrl;
+    } else {
+      axios
+        .post(
+          "https://discord.com/api/oauth2/token",
+          new URLSearchParams({
+    client_id: clientId,
+    client_secret: clientSecret,
+    grant_type: "authorization_code",
+    code,
+    redirect_uri: redirectUri,
+  }),
+          {
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          }
+        )
+        .then((res) => {
+          const accessToken = res.data.access_token;
+          return axios.get("https://discord.com/api/users/@me", {
+            headers: { Authorization: `Bearer ${accessToken}` },
+          });
+        })
+        .then((res) => {
+          userId = res.data.id;
+
+          renderPainel();
+        })
+        .catch((err) => {
+          console.error(err);
+          statusEl.innerText = "Erro no login do Discord";
+        });
+    }
+  </script>
 </body>
 </html>
-        
