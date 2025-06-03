@@ -1,61 +1,103 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <link rel="icon" href="https://cdn.discordapp.com/icons/1377291785226686464/a66ee0827944afe89fb64f09cd466021.png?size=2048" type="image/png">
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Scriepe Bux - Vendas de Robux</title>
+  <link rel="icon" href="https://cdn.discordapp.com/icons/1377291785226686464/a66ee0827944afe89fb64f09cd466021.png?size=2048" type="image/png" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
+    * {
+      box-sizing: border-box;
       margin: 0;
-      background: #f5f5f5;
-      color: #333;
+      padding: 0;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #0e0e10;
+      color: #e5e5e5;
+      line-height: 1.6;
     }
     header, footer {
       background: #111;
-      color: white;
       padding: 1rem;
       text-align: center;
     }
-    h1 { margin: 0.5em 0; }
+    header h1, footer p {
+      margin: 0.5rem 0;
+    }
+    a {
+      color: #7289da;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
     .container {
       max-width: 600px;
       margin: 2em auto;
-      padding: 1em;
-      background: white;
-      border-radius: 10px;
-      box-shadow: 0 0 10px #ccc;
+      padding: 2em;
+      background: #1e1f22;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+    }
+    h2 {
+      margin-bottom: 1rem;
+      color: #fff;
     }
     input, button, select {
       width: 100%;
-      padding: 10px;
-      margin: 0.5em 0;
-      border-radius: 5px;
-      border: 1px solid #ccc;
+      padding: 12px;
+      margin: 0.5em 0 1em;
+      border-radius: 8px;
+      border: none;
+      font-size: 1rem;
+    }
+    input, select {
+      background: #2f3136;
+      color: #e5e5e5;
+    }
+    .button {
+      background: #5865f2;
+      color: white;
+      font-weight: 600;
+      transition: background 0.3s ease;
+    }
+    .button:hover {
+      background: #4752c4;
     }
     .admin-panel, .store {
       display: none;
     }
     .creditos {
-      margin-top: 2em;
       font-size: 0.9em;
-      color: #777;
+      color: #aaa;
     }
-    .button {
-      background-color: #111;
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+    ul li {
+      background: #2f3136;
+      padding: 0.5rem;
+      border-radius: 6px;
+      margin-bottom: 0.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    ul li button {
+      background: #ff5c5c;
       color: white;
-      border: none;
-      cursor: pointer;
-    }
-    .button:hover {
-      background-color: #333;
+      padding: 0.3rem 0.7rem;
+      font-size: 0.9rem;
     }
   </style>
 </head>
 <body>
 
 <header>
+  <img src="https://cdn.discordapp.com/icons/1377291785226686464/a66ee0827944afe89fb64f09cd466021.png?size=128" alt="Logo" width="64" style="border-radius: 50%; margin-bottom: 10px;">
   <h1>Scriepe Bux - Vendas de Robux</h1>
 </header>
 
@@ -138,12 +180,10 @@
     else if (q === "500") preco = 16;
     else if (q === "750") preco = 24;
     else if (q === "1000") preco = 32;
-    else if (q === "custom") preco = (val * 0.032).toFixed(2); // Base aproximada
+    else if (q === "custom") preco = (val * 0.032).toFixed(2);
 
     if (!val || val <= 0) return alert("Informe uma quantidade válida.");
-    const msg = `Chave Pix: <b>willianvss0011@gmail.com</b><br>
-                 Valor: <b>R$ ${preco}</b> para <b>${val} Robux</b><br>
-                 Envie o comprovante no nosso Discord.`;
+    const msg = `Chave Pix: <b>willianvss0011@gmail.com</b><br>Valor: <b>R$ ${preco}</b> para <b>${val} Robux</b><br>Envie o comprovante no nosso Discord.`;
     document.getElementById("pagamento").innerHTML = msg;
   }
 
@@ -184,7 +224,6 @@
     location.reload();
   }
 
-  // Auto login se já estiver autenticado
   if (localStorage.getItem("loggedUser")) {
     loadUI();
   }
