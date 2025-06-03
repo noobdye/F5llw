@@ -1,404 +1,376 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>CordFleet - Painel de Hospedagem de Bots</title>
-<style>
-  /* Reset básico */
-  * {
-    margin: 0; padding: 0; box-sizing: border-box;
-  }
-
-  body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #141E30, #243B55);
-    color: #EEE;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px;
-  }
-
-  header {
-    margin-bottom: 30px;
-    text-align: center;
-  }
-
-  header h1 {
-    font-weight: 700;
-    font-size: 2.4rem;
-    color: #5865F2;
-    text-shadow: 0 0 10px #5865F2;
-  }
-
-  #app {
-    background: #1f2937;
-    padding: 30px;
-    border-radius: 15px;
-    max-width: 700px;
-    width: 100%;
-    box-shadow: 0 0 20px rgba(88, 101, 242, 0.4);
-  }
-
-  .user-welcome {
-    font-size: 1.4rem;
-    margin-bottom: 20px;
-    text-align: center;
-    color: #A5B4FC;
-  }
-
-  label {
-    display: block;
-    font-weight: 600;
-    margin-bottom: 10px;
-    color: #9CA3AF;
-  }
-
-  input[type="file"] {
-    width: 100%;
-    padding: 12px 15px;
-    border-radius: 8px;
-    border: none;
-    cursor: pointer;
-    background: #374151;
-    color: #E5E7EB;
-    font-size: 1rem;
-    transition: background-color 0.3s ease;
-  }
-
-  input[type="file"]:hover {
-    background: #4B5563;
-  }
-
-  button {
-    margin-top: 20px;
-    width: 100%;
-    padding: 14px 0;
-    background: #5865F2;
-    border: none;
-    border-radius: 12px;
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: #FFFFFF;
-    cursor: pointer;
-    box-shadow: 0 4px 15px rgba(88, 101, 242, 0.6);
-    transition: background-color 0.3s ease;
-  }
-
-  button:hover:not(:disabled) {
-    background: #4752C4;
-  }
-
-  button:disabled {
-    background: #8B8FBD;
-    cursor: not-allowed;
-  }
-
-  #botStatus {
-    margin-top: 30px;
-  }
-
-  .bot-card {
-    background: #374151;
-    border-radius: 12px;
-    padding: 20px;
-    margin-bottom: 20px;
-    box-shadow: inset 0 0 10px rgba(0,0,0,0.6);
-  }
-
-  .bot-card h3 {
-    color: #E0E7FF;
-    margin-bottom: 10px;
-  }
-
-  .bot-info p {
-    margin-bottom: 6px;
-    font-size: 1rem;
-  }
-
-  .bot-buttons {
-    margin-top: 15px;
-    display: flex;
-    gap: 15px;
-  }
-
-  .bot-buttons button {
-    flex: 1;
-    background: #3B82F6;
-    padding: 10px;
-    font-size: 0.95rem;
-    border-radius: 10px;
-    box-shadow: 0 2px 8px rgba(59,130,246,0.7);
-  }
-
-  .bot-buttons button:hover {
-    background: #2563EB;
-  }
-
-  .message {
-    margin-top: 15px;
-    text-align: center;
-    font-weight: 600;
-    font-size: 1rem;
-  }
-
-  .message.success {
-    color: #22C55E;
-  }
-
-  .message.error {
-    color: #EF4444;
-  }
-
-  pre.logs {
-    max-height: 200px;
-    overflow-y: auto;
-    background: #111827;
-    padding: 15px;
-    border-radius: 12px;
-    margin-top: 15px;
-    white-space: pre-wrap;
-    font-size: 0.9rem;
-    line-height: 1.3;
-  }
-
-  @media (max-width: 480px) {
-    .bot-buttons {
+  <meta charset="UTF-8" />
+  <title>CordFleet - Painel de Bots</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background: #121212;
+      color: #eee;
+      display: flex;
       flex-direction: column;
+      align-items: center;
+      padding: 20px;
+      min-height: 100vh;
     }
-    .bot-buttons button {
+    header {
       width: 100%;
+      max-width: 720px;
+      text-align: center;
+      margin-bottom: 30px;
     }
-  }
-</style>
+    header h1 {
+      font-weight: 700;
+      font-size: 2rem;
+      color: #5865f2;
+      letter-spacing: 2px;
+    }
+    .container {
+      max-width: 720px;
+      width: 100%;
+      background: #1e1e1e;
+      border-radius: 12px;
+      padding: 30px 30px 40px;
+      box-shadow: 0 8px 20px rgb(88 101 242 / 0.5);
+    }
+    input[type="file"] {
+      margin-top: 12px;
+      width: 100%;
+      padding: 14px 12px;
+      font-size: 1rem;
+      border-radius: 8px;
+      border: none;
+      background: #2e2e2e;
+      color: #eee;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+    input[type="file"]:hover {
+      background: #444;
+    }
+    button {
+      margin-top: 16px;
+      width: 100%;
+      padding: 14px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 8px;
+      background: #5865f2;
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.25s ease;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+    }
+    button:disabled {
+      background: #3b3b7a;
+      cursor: not-allowed;
+    }
+    #botStatus {
+      margin-top: 25px;
+      background: #2c2c2c;
+      border-radius: 10px;
+      padding: 20px;
+      font-size: 1rem;
+      color: #ddd;
+      box-shadow: inset 0 0 10px #0009;
+    }
+    #botStatus hr {
+      border: none;
+      border-top: 1px solid #444;
+      margin: 12px 0;
+    }
+    #botStatus p {
+      margin: 6px 0;
+    }
+    #botStatus .actions button {
+      width: auto;
+      margin: 8px 6px 0 0;
+      padding: 8px 14px;
+      font-size: 0.9rem;
+    }
+    #status {
+      font-size: 1.15rem;
+      text-align: center;
+      margin-bottom: 16px;
+      color: #999;
+    }
+    .message {
+      margin-top: 15px;
+      padding: 12px;
+      border-radius: 8px;
+      font-weight: 600;
+      text-align: center;
+    }
+    .message.success {
+      background: #2a7a2a;
+      color: #d2f8d2;
+    }
+    .message.error {
+      background: #a63535;
+      color: #f8d2d2;
+    }
+    .loading-spinner {
+      border: 3px solid #ddd;
+      border-top: 3px solid #5865f2;
+      border-radius: 50%;
+      width: 18px;
+      height: 18px;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      0% {transform: rotate(0deg);}
+      100% {transform: rotate(360deg);}
+    }
+  </style>
 </head>
 <body>
+  <header>
+    <h1>CordFleet - Painel de Bots</h1>
+  </header>
+  <div class="container" id="app">
+    <div id="status">Verificando login...</div>
+  </div>
 
-<header>
-  <h1>CordFleet - Painel de Bots</h1>
-</header>
+  <script>
+    const discloudToken = "eyJhbGciOiJIUzI1NiJ9.eyJpZCI6IjEwOTg3NDUzODQ4NDg4NTkyNTgiLCJrZXkiOiJhYzRmYTIzZGVjZGFkMjE3ODZlNzY3ZjNiYTk0In0.MPy6WoCQRlts4bHoVRLYyb8gqw9m6eRu3CuQFv7u_JY";
+    const clientId = "1358987708579709042";
+    const clientSecret = "FZQWyJTmpGgBSpCfTBRd1kcGl6Xf7-XI";
+    const redirectUri = "https://www.f5llw.shop/cordfleet.html";
 
-<div id="app">
-  <p id="status">Carregando...</p>
-</div>
+    const urlParams = new URLSearchParams(window.location.search);
+    const code = urlParams.get("code");
 
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-<script>
-  const discloudToken = "eyJhbGciOiJIUzI1NiJ9.eyJpZCI6IjEwOTg3NDUzODQ4NDg4NTkyNTgiLCJrZXkiOiJhYzRmYTIzZGVjZGFkMjE3ODZlNzY3ZjNiYTk0In0.MPy6WoCQRlts4bHoVRLYyb8gqw9m6eRu3CuQFv7u_JY";
-  const clientId = "1358987708579709042";
-  const clientSecret = "FZQWyJTmpGgBSpCfTBRd1kcGl6Xf7-XI";
-  const redirectUri = "https://f5llw.shop/cordfleet.html";
+    const app = document.getElementById("app");
+    const statusEl = document.getElementById("status");
 
-  const app = document.getElementById('app');
-  const urlParams = new URLSearchParams(window.location.search);
-  const code = urlParams.get('code');
+    let userId = null;
+    let lastStatusTime = null;
 
-  let userId = null;
-  let accessToken = null;
-  let userBot = null;
-
-  function showMessage(msg, type = "success") {
-    let el = document.querySelector(".message");
-    if (!el) {
-      el = document.createElement("p");
-      el.classList.add("message");
-      app.appendChild(el);
+    function showMessage(type, text) {
+      const msgDiv = document.createElement("div");
+      msgDiv.className = `message ${type}`;
+      msgDiv.textContent = text;
+      app.insertBefore(msgDiv, app.firstChild);
+      setTimeout(() => {
+        msgDiv.remove();
+      }, 5000);
     }
-    el.textContent = msg;
-    el.className = "message " + type;
-  }
 
-  function clearMessage() {
-    const el = document.querySelector(".message");
-    if(el) el.remove();
-  }
-
-  // Renderiza o painel após login
-  function renderPanel() {
-    app.innerHTML = `
-      <p class="user-welcome">Olá, usuário <strong>${userId}</strong></p>
-      <label for="zipFile">Escolha o arquivo .zip do seu bot:</label>
-      <input type="file" id="zipFile" accept=".zip" />
-      <button id="uploadBtn">Hospedar Bot</button>
-      <div id="botStatus"></div>
-    `;
-
-    document.getElementById('uploadBtn').addEventListener('click', uploadBot);
-
-    loadUserBot();
-  }
-
-  // Carrega o bot do usuário, se existir
-  function loadUserBot() {
-    clearMessage();
-    document.getElementById('botStatus').innerHTML = '<p>Carregando dados do seu bot...</p>';
-    axios.get('https://api.discloud.app/v2/user/apps', {
-      headers: { Authorization: discloudToken }
-    }).then(({ data }) => {
-      const bots = data.apps.filter(bot => bot.userID === userId);
-      if (bots.length > 0) {
-        userBot = bots[0];
-        renderBotInfo();
+    function setButtonLoading(button, isLoading) {
+      if (isLoading) {
+        button.disabled = true;
+        button.innerHTML = `<div class="loading-spinner"></div>`;
       } else {
-        userBot = null;
-        document.getElementById('botStatus').innerHTML = `<p>Você ainda não hospedou nenhum bot.</p>`;
+        button.disabled = false;
+        button.textContent = button.getAttribute("data-text");
       }
-    }).catch(err => {
-      document.getElementById('botStatus').innerHTML = `<p>Erro ao carregar bots: ${err.message}</p>`;
-    });
-  }
-
-  // Renderiza informações do bot com botões
-  function renderBotInfo() {
-    if(!userBot) return;
-
-    const botDiv = document.getElementById('botStatus');
-    botDiv.innerHTML = `
-      <div class="bot-card">
-        <h3>Bot: ${userBot.name}</h3>
-        <div class="bot-info">
-          <p><strong>Status:</strong> ${userBot.status}</p>
-          <p><strong>RAM Usada:</strong> ${userBot.ramUsed} MB</p>
-          <p><strong>CPU:</strong> ${userBot.cpuUsed || 'N/A'}</p>
-          <p><strong>Versão:</strong> ${userBot.version || 'N/A'}</p>
-        </div>
-        <div class="bot-buttons">
-          <button id="btnLogs">Ver Logs</button>
-          <button id="btnRestart">Reiniciar</button>
-          <button id="btnDelete" style="background-color:#EF4444; box-shadow: 0 2px 8px rgba(239,68,68,0.7);">Remover</button>
-        </div>
-        <pre class="logs" id="logsArea" style="display:none;"></pre>
-      </div>
-    `;
-
-    document.getElementById('btnLogs').addEventListener('click', fetchLogs);
-    document.getElementById('btnRestart').addEventListener('click', restartBot);
-    document.getElementById('btnDelete').addEventListener('click', deleteBot);
-  }
-
-  // Upload do bot .zip
-  function uploadBot() {
-    clearMessage();
-    const fileInput = document.getElementById('zipFile');
-    const file = fileInput.files[0];
-    if (!file) {
-      showMessage('Por favor, selecione um arquivo .zip', 'error');
-      return;
     }
 
-    if (userBot) {
-      showMessage('Você já tem um bot hospedado. Remova-o antes de enviar outro.', 'error');
-      return;
+    function renderPainel() {
+      app.innerHTML = `
+        <h2>Olá, usuário #${userId}</h2>
+        <p>Envie seu bot (.zip) para hospedar (1 bot por pessoa)</p>
+        <input type="file" id="zipFile" accept=".zip" />
+        <button id="uploadBtn" data-text="Hospedar Bot">🚀 Hospedar Bot</button>
+        <button id="refreshBtn" data-text="Atualizar Status">🔄 Atualizar Status</button>
+        <div id="botStatus"></div>
+      `;
+
+      document.getElementById("uploadBtn").addEventListener("click", uploadBot);
+      document.getElementById("refreshBtn").addEventListener("click", () => {
+        checkUserBot(true);
+      });
+      checkUserBot();
     }
 
-    const formData = new FormData();
-    formData.append('file', file);
-
-    const uploadBtn = document.getElementById('uploadBtn');
-    uploadBtn.disabled = true;
-    uploadBtn.textContent = 'Hospedando...';
-
-    axios.post('https://api.discloud.app/v2/app', formData, {
-      headers: {
-        Authorization: discloudToken,
-        "x-user-id": userId,
-        'Content-Type': 'multipart/form-data'
+    function checkUserBot(showLoading = false) {
+      if (showLoading) {
+        const refreshBtn = document.getElementById("refreshBtn");
+        setButtonLoading(refreshBtn, true);
       }
-    }).then(() => {
-      showMessage('Bot hospedado com sucesso!');
-      uploadBtn.disabled = false;
-      uploadBtn.textContent = 'Hospedar Bot';
-      fileInput.value = null;
-      loadUserBot();
-    }).catch(err => {
-      showMessage('Erro ao hospedar: ' + (err.response?.data?.message || err.message), 'error');
-      uploadBtn.disabled = false;
-      uploadBtn.textContent = 'Hospedar Bot';
-    });
-  }
+      axios.get("https://api.discloud.app/v1/bot", {
+        headers: { Authorization: `Bearer ${discloudToken}` },
+      })
+        .then(({ data }) => {
+          const apps = data.filter((app) => app.userID === userId);
+          if (apps.length > 0) {
+            const bot = apps[0];
+            lastStatusTime = new Date().toLocaleString();
+            document.getElementById("botStatus").innerHTML = `
+              <hr />
+              <p><strong>Seu Bot:</strong> ${bot.name}</p>
+              <p>Status: <strong>${bot.status}</strong></p>
+              <p>RAM usada: ${bot.ramUsed} MB</p>
+              <p>CPU: ${bot.cpuPercent || 'N/A'}</p>
+              <p>Disco: ${bot.diskUsed || 'N/A'}</p>
+              <p>Data de criação: ${bot.createdAt ? new Date(bot.createdAt).toLocaleString() : 'N/A'}</p>
+              <p><em>Última atualização: ${lastStatusTime}</em></p>
+              <div class="actions">
+                <button id="logsBtn" data-text="Ver Logs">📜 Ver Logs</button>
+                <button id="restartBtn" data-text="Reiniciar">🔄 Reiniciar</button>
+                <button id="removeBtn" data-text="Remover">🗑️ Remover</button>
+              </div>
+            `;
 
-  // Buscar logs do bot
-  function fetchLogs() {
-    clearMessage();
-    const logsArea = document.getElementById('logsArea');
-    logsArea.style.display = 'block';
-    logsArea.textContent = 'Carregando logs...';
+            document.getElementById("logsBtn").addEventListener("click", () => verLogs(bot.id));
+            document.getElementById("restartBtn").addEventListener("click", () => reiniciarBot(bot.id));
+            document.getElementById("removeBtn").addEventListener("click", () => removerBot(bot.id));
+          } else {
+            document.getElementById("botStatus").innerHTML = `<p>Você não tem bots hospedados.</p>`;
+          }
+        })
+        .catch((err) => {
+          showMessage("error", "Erro ao carregar bots: " + (err.response?.data?.message || err.message));
+        })
+        .finally(() => {
+          if (showLoading) {
+            setButtonLoading(document.getElementById("refreshBtn"), false);
+          }
+        });
+    }
 
-    axios.get(`https://api.discloud.app/v2/app/${userBot.id}/logs`, {
-      headers: { Authorization: discloudToken }
-    }).then(({ data }) => {
-      logsArea.textContent = data.logs || "Sem logs recentes.";
-    }).catch(err => {
-      logsArea.textContent = 'Erro ao buscar logs: ' + err.message;
-    });
-  }
+    function uploadBot() {
+      const file = document.getElementById("zipFile").files[0];
+      if (!file) return showMessage("error", "Envie um arquivo ZIP!");
 
-  // Reiniciar bot
-  function restartBot() {
-    clearMessage();
-    if (!confirm('Tem certeza que deseja reiniciar o bot?')) return;
+      const uploadBtn = document.getElementById("uploadBtn");
+      setButtonLoading(uploadBtn, true);
 
-    axios.post(`https://api.discloud.app/v2/app/${userBot.id}/restart`, {}, {
-      headers: { Authorization: discloudToken }
-    }).then(() => {
-      showMessage('Bot reiniciado com sucesso!');
-      loadUserBot();
-    }).catch(err => {
-      showMessage('Erro ao reiniciar: ' + err.message, 'error');
-    });
-  }
+      const formData = new FormData();
+      formData.append("file", file);
 
-  // Remover bot
-  function deleteBot() {
-    clearMessage();
-    if (!confirm('Tem certeza que deseja remover o bot? Essa ação não pode ser desfeita.')) return;
+      axios
+        .post("https://api.discloud.app/v1/bot", formData, {
+          headers: {
+            Authorization: `Bearer ${discloudToken}`,
+            "Content-Type": "multipart/form-data",
+          },
+        })
+        .then(() => {
+          showMessage("success", "Bot hospedado com sucesso!");
+          checkUserBot();
+          document.getElementById("zipFile").value = "";
+        })
+        .catch((err) => {
+          showMessage("error", "Erro ao hospedar: " + (err.response?.data?.message || err.message));
+        })
+        .finally(() => {
+          setButtonLoading(uploadBtn, false);
+        });
+    }
 
-    axios.delete(`https://api.discloud.app/v2/app/${userBot.id}`, {
-      headers: { Authorization: discloudToken }
-    }).then(() => {
-      showMessage('Bot removido com sucesso!');
-      userBot = null;
-      loadUserBot();
-    }).catch(err => {
-      showMessage('Erro ao remover bot: ' + err.message, 'error');
-    });
-  }
+    function verLogs(appId) {
+      axios
+        .get(`https://api.discloud.app/v1/bot/${appId}/logs`, {
+          headers: { Authorization: `Bearer ${discloudToken}` },
+        })
+        .then(({ data }) => {
+          alert("Logs:\n" + data.logs);
+        })
+        .catch((err) => {
+          showMessage("error", "Erro ao buscar logs: " + (err.response?.data?.message || err.message));
+        });
+    }
 
-  // Processo de OAuth2 Discord
-  if (!code) {
-    // Redireciona para o login Discord
-    const oauthUrl = `https://discord.com/api/oauth2/authorize?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code&scope=identify`;
-    window.location.href = oauthUrl;
-  } else {
-    document.getElementById('status').textContent = "Autenticando no Discord...";
+    function reiniciarBot(appId) {
+      const restartBtn = document.getElementById("restartBtn");
+      setButtonLoading(restartBtn, true);
+      axios
+        .post(`https://api.discloud.app/v1/bot/${appId}/restart`, {}, {
+          headers: { Authorization: `Bearer ${discloudToken}` },
+        })
+        .then(() => {
+          showMessage("success", "Bot reiniciado.");
+          checkUserBot();
+        })
+        .catch((err) => showMessage("error", "Erro ao reiniciar: " + (err.response?.data?.message || err.message)))
+        .finally(() => {
+          setButtonLoading(restartBtn, false);
+        });
+    }
 
-    // Trocar code pelo token
-    axios.post("https://discord.com/api/oauth2/token",
-      new URLSearchParams({
+    function removerBot(appId) {
+      const removeBtn = document.getElementById("removeBtn");
+      if (!confirm("Tem certeza que deseja remover seu bot? Esta ação é irreversível.")) return;
+
+      setButtonLoading(removeBtn, true);
+      axios
+        .delete(`https://api.discloud.app/v1/bot/${appId}`, {
+          headers: { Authorization: `Bearer ${discloudToken}` },
+        })
+        .then(() => {
+          showMessage("success", "Bot removido com sucesso.");
+          checkUserBot();
+        })
+        .catch((err) => showMessage("error", "Erro ao remover: " + (err.response?.data?.message || err.message)))
+        .finally(() => {
+          setButtonLoading(removeBtn, false);
+        });
+    }
+
+    function discordLogin() {
+      const params = new URLSearchParams({
+        client_id: clientId,
+        redirect_uri: redirectUri,
+        response_type: "code",
+        scope: "identify",
+      });
+      window.location.href = `https://discord.com/api/oauth2/authorize?${params.toString()}`;
+    }
+
+    async function fetchAccessToken(code) {
+      const params = new URLSearchParams({
         client_id: clientId,
         client_secret: clientSecret,
         grant_type: "authorization_code",
-        code: code,
+        code,
         redirect_uri: redirectUri,
-      }),
-      { headers: { "Content-Type": "application/x-www-form-urlencoded" } }
-    ).then(res => {
-      accessToken = res.data.access_token;
-
-      return axios.get("https://discord.com/api/users/@me", {
-        headers: { Authorization: `Bearer ${accessToken}` }
+        scope: "identify",
       });
-    }).then(res => {
-      userId = res.data.id;
-      renderPanel();
-    }).catch(err => {
-      document.getElementById('status').textContent = "Erro na autenticação. Recarregue a página.";
-      console.error(err);
-    });
-  }
-</script>
 
+      const response = await axios.post("https://discord.com/api/oauth2/token", params, {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+      });
+      return response.data.access_token;
+    }
+
+    async function fetchUser(accessToken) {
+      const response = await axios.get("https://discord.com/api/users/@me", {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+      return response.data;
+    }
+
+    async function main() {
+      if (!code) {
+        statusEl.textContent = "Redirecionando para login...";
+        discordLogin();
+        return;
+      }
+
+      try {
+        statusEl.textContent = "Autenticando...";
+        const accessToken = await fetchAccessToken(code);
+        const user = await fetchUser(accessToken);
+        userId = user.id;
+        renderPainel();
+      } catch (e) {
+        statusEl.textContent = "Erro ao autenticar, tente recarregar a página.";
+        console.error(e);
+      }
+    }
+
+    main();
+  </script>
 </body>
 </html>
