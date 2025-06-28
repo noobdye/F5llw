@@ -9,12 +9,12 @@ const axios = require("axios");
 const app = express();
 const upload = multer({ dest: "uploads/" });
 
-const DISCLOUD_TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJpZCI6IjEwOTg3NDUzODQ4NDg4NTkyNTgiLCJrZXkiOiJhYzRmYTIzZGVjZGFkMjE3ODZlNzY3ZjNiYTk0In0.MPy6WoCQRlts4bHoVRLYyb8gqw9m6eRu3CuQFv7u_JY";
+const DISCLOUD_TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJpZCI6IjEwOTg3NDUzODQ4NDg4NTkyNTgiLCJrZXkiOiJhYzRmYTIzZGVjZGFkMjE3ODZlNzY3ZjNiYTk0In0.MPy6WoCQRlts4bHoVRLYyb8gqw9m6eR";
 
 app.use(express.static("public"));
 
 app.post("/upload", upload.single("zipfile"), async (req, res) => {
-  if (!req.file || path.extname(req.file.originalname) !== ".zip") {
+  if (!req.file || path.extname(req.file.originalname).toLowerCase() !== ".zip") {
     return res.status(400).send("❌ Envie um arquivo .zip válido.");
   }
 
@@ -36,13 +36,13 @@ app.post("/upload", upload.single("zipfile"), async (req, res) => {
         if (fs.statSync(caminho).isDirectory()) {
           resultados = resultados.concat(buscarArquivos(caminho));
         } else {
-          resultados.push(path.relative(extractPath, caminho));
+          resultados.push(path.relative(extractPath, caminho).toLowerCase());
         }
       }
       return resultados;
     };
 
-    const arquivosExtraidos = buscarArquivos(extractPath).map(f => f.toLowerCase());
+    const arquivosExtraidos = buscarArquivos(extractPath);
 
     const temMain = arquivosExtraidos.includes("main.py");
     const temRequirements = arquivosExtraidos.includes("requirements.txt");
@@ -53,34 +53,40 @@ app.post("/upload", upload.single("zipfile"), async (req, res) => {
       return res.status(400).send("❌ O ZIP deve conter 'main.py' e 'requirements.txt'");
     }
 
-    // Envia para a Discloud
+    // Enviar para Discloud
     const form = new FormData();
     form.append("file", fs.createReadStream(zipPath));
     form.append("ram", "150");
     form.append("main", "main.py");
 
-    const resposta = await axios.post("https://api.discloud.app/v2/app/create", form, {
-      headers: {
-        "api-token": DISCLOUD_TOKEN,
-        ...form.getHeaders(),
-      },
-    });
+    const headers = {
+      "api-token": DISCLOUD_TOKEN,
+      ...form.getHeaders(),
+    };
 
-    // Apaga os arquivos locais após o envio
+    console.log("Enviando arquivo para Discloud...");
+
+    const resposta = await axios.post("https://api.discloud.app/v2/app/create", form, { headers });
+
+    // Apaga arquivos temporários
     fs.rmSync(extractPath, { recursive: true, force: true });
     fs.unlinkSync(zipPath);
 
-    const respostaDiscloud = resposta.data;
+    console.log("Resposta Discloud:", resposta.data);
 
-    if (respostaDiscloud.success) {
-      res.send("✅ Bot enviado e hospedado na Discloud com sucesso!");
+    if (resposta.data.success) {
+      return res.send("✅ Bot enviado e hospedado na Cordfleet com sucesso!");
     } else {
-      res.status(500).send("❌ Erro na hospedagem Discloud: " + JSON.stringify(respostaDiscloud));
+      return res.status(500).send("❌ Erro na hospedagem Discloud: " + JSON.stringify(resposta.data));
     }
 
   } catch (erro) {
-    console.error("Erro:", erro);
-    res.status(500).send("❌ Erro interno ao processar o ZIP ou enviar para a Discloud.");
+    console.error("Erro interno:", erro);
+    try {
+      if (fs.existsSync(extractPath)) fs.rmSync(extractPath, { recursive: true, force: true });
+      if (fs.existsSync(zipPath)) fs.unlinkSync(zipPath);
+    } catch {}
+    return res.status(500).send("❌ Erro interno ao processar o ZIP ou enviar para a Cordfleet.");
   }
 });
 
