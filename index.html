@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SiteHost - Hospedagem de Bots</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      font-family: 'Inter', sans-serif;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 10px;
+      color: #00ffae;
+    }
+    p {
+      font-size: 1.2rem;
+      margin-bottom: 30px;
+      text-align: center;
+      max-width: 600px;
+    }
+    input[type="file"] {
+      background: #1c1c1e;
+      padding: 12px;
+      border: 1px solid #444;
+      border-radius: 8px;
+      color: #ccc;
+      width: 100%;
+      max-width: 400px;
+    }
+    button {
+      margin-top: 20px;
+      padding: 12px 25px;
+      background-color: #00ffae;
+      border: none;
+      border-radius: 8px;
+      color: #000;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #00d995;
+    }
+    #status {
+      margin-top: 20px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      text-align: center;
+    }
+    footer {
+      margin-top: 50px;
+      font-size: 0.9rem;
+      color: #aaa;
+    }
+  </style>
+</head>
+<body>
+  <h1>Cordfleet 🚀</h1>
+  <p>Hospede seu bot Python direto na Cordfleet com segurança e facilidade! RAM fixa: <b>150MB</b></b>.</p>
+  <input type="file" id="fileInput" accept=".py" />
+  <button onclick="enviar()">📤 Enviar Bot</button>
+  <div id="status"></div>
+  <footer>Feito com 💙 por Cordfleet</footer>
+
+  <script>
+    async function enviar() {
+      const input = document.getElementById("fileInput");
+      const status = document.getElementById("status");
+
+      if (!input.files.length) {
+        alert("Selecione um arquivo .py");
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append("arquivo", input.files[0]);
+
+      status.textContent = "⏳ Enviando, aguarde...";
+
+      try {
+        const res = await fetch("/enviar", {
+          method: "POST",
+          body: formData,
+        });
+
+        const json = await res.json();
+        if (json.success) {
+          status.innerHTML = "✅ Bot enviado com sucesso! ID: <b>" + json.apps[0].id + "</b>";
+        } else {
+          status.textContent = "❌ Erro: " + (json.message || "Erro desconhecido.");
+        }
+      } catch (err) {
+        status.textContent = "❌ Erro na conexão com o servidor.";
+      }
+    }
+  </script>
+</body>
+</html>
