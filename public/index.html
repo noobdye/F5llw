@@ -1,14 +1,15 @@
 <!DOCTYPE html>
-<html lang="pt-BR" >
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>CordFleet 🚀 | Hospedagem de Bots</title>
+  <title>CordFleet 🚀 | Painel de Bots</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet" />
   <style>
     * {
       box-sizing: border-box;
-      margin: 0; padding: 0;
+      margin: 0;
+      padding: 0;
     }
     body {
       font-family: 'Poppins', sans-serif;
@@ -18,195 +19,169 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
+      justify-content: flex-start;
       padding: 2rem;
       user-select: none;
-      text-align: center;
     }
     h1 {
-      font-size: 3.5rem;
+      font-size: 2.8rem;
+      margin: 1rem 0 0.5rem;
       color: #00ffae;
       text-shadow: 0 0 8px #00ffae;
-      margin-bottom: 0.3em;
-      font-weight: 900;
     }
-    p {
-      font-size: 1.2rem;
-      max-width: 480px;
-      margin-bottom: 2rem;
-      line-height: 1.5;
-      color: #a8f9c9cc;
-    }
-    .file-upload {
-      position: relative;
-      display: inline-block;
-      width: 320px;
-      max-width: 90vw;
-      cursor: pointer;
-      border: 2px dashed #00ffae88;
-      padding: 1.5rem 1rem;
-      border-radius: 12px;
-      transition: background-color 0.3s ease, border-color 0.3s ease;
-      color: #00ffaecc;
-      font-weight: 600;
-      user-select: none;
-      box-shadow: inset 0 0 12px #00ffae33;
-      overflow: hidden;
-    }
-    .file-upload:hover {
-      background-color: #00ffae11;
-      border-color: #00ffaeee;
-      box-shadow: inset 0 0 20px #00ffae66;
-    }
-    .file-upload input[type="file"] {
-      position: absolute;
-      left: 0; top: 0;
+    .box {
+      background: #1e2b35;
+      padding: 2rem;
+      border-radius: 16px;
+      box-shadow: 0 0 20px #00ffae55;
       width: 100%;
-      height: 100%;
-      opacity: 0;
-      cursor: pointer;
+      max-width: 500px;
+      margin-top: 2rem;
+      animation: fadeIn 0.6s ease;
+    }
+    input, button {
+      width: 100%;
+      padding: 0.8rem;
+      margin: 0.5rem 0;
+      border-radius: 8px;
+      border: none;
+      font-size: 1rem;
+    }
+    input {
+      background: #2f3e4c;
+      color: #fff;
+      outline: none;
     }
     button {
-      margin-top: 1.5rem;
-      background: linear-gradient(45deg, #00ffae, #00d995);
-      border: none;
-      padding: 14px 38px;
-      border-radius: 30px;
-      font-size: 1.15rem;
-      font-weight: 700;
+      background: linear-gradient(90deg, #00ffae, #00d995);
       color: #000;
+      font-weight: bold;
       cursor: pointer;
-      box-shadow: 0 0 10px #00ffae99;
-      transition: all 0.3s ease;
-      position: relative;
-      overflow: hidden;
-      user-select: none;
-    }
-    button::before {
-      content: "";
-      position: absolute;
-      width: 120%;
-      height: 120%;
-      background: linear-gradient(270deg, #00d995, #00ffae);
-      top: -100%;
-      left: -10%;
-      transform: rotate(45deg);
-      transition: all 0.5s ease;
-      filter: blur(15px);
-      opacity: 0.7;
-      z-index: -1;
-    }
-    button:hover::before {
-      top: 0;
-      left: 0;
-      opacity: 1;
-      filter: blur(25px);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
     button:hover {
+      transform: scale(1.03);
+      box-shadow: 0 0 12px #00ffaeaa;
+    }
+    .upload {
+      margin-top: 2rem;
+      display: none;
+    }
+    label {
+      display: block;
+      margin-top: 1rem;
+      font-weight: bold;
+    }
+    .oauth {
+      margin-top: 1rem;
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+    .oauth button {
+      flex: 1;
+      background: #5865F2;
       color: #fff;
-      box-shadow: 0 0 25px #00ffaebb;
-      transform: scale(1.05);
+    }
+    .oauth button.google {
+      background: #DB4437;
     }
     #status {
-      margin-top: 1.8rem;
-      font-size: 1.1rem;
-      font-weight: 700;
-      min-height: 1.5em;
-      color: #00ffae;
-      text-shadow: 0 0 8px #00ffaeaa;
-      transition: color 0.3s ease;
-      user-select: text;
-      white-space: pre-wrap;
-      max-width: 90vw;
-    }
-    #status.error {
-      color: #ff4c4c;
-      text-shadow: 0 0 8px #ff4c4cbb;
+      margin-top: 1rem;
+      min-height: 1rem;
+      text-align: center;
+      font-weight: bold;
     }
     footer {
-      margin-top: 4rem;
+      margin-top: auto;
+      padding-top: 2rem;
       font-size: 0.9rem;
-      color: #555;
-      user-select: text;
+      color: #aaa;
+      text-align: center;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
   </style>
 </head>
 <body>
   <h1>CordFleet 🚀</h1>
-  <p>
-    Hospede seu bot Python direto na CordFleet com segurança e facilidade!<br />
-    Envie um arquivo <b>.zip</b> contendo <b>main.py</b> e <b>requirements.txt</b>.<br />
-    RAM fixa: <b>150MB</b>.
-  </p>
+  <div class="box" id="authBox">
+    <input type="text" id="username" placeholder="Usuário" />
+    <input type="password" id="password" placeholder="Senha" />
+    <button onclick="login()">🔓 Entrar</button>
+    <button onclick="register()">📝 Registrar</button>
+    <div class="oauth">
+      <button onclick="location.href='/auth/discord'">Login Discord</button>
+      <button class="google" onclick="location.href='/auth/google'">Login Google</button>
+    </div>
+    <div id="status"></div>
+  </div>
 
-  <label class="file-upload" for="fileInput">
-    Selecione seu arquivo ZIP
-    <input type="file" id="fileInput" accept=".zip" />
-  </label>
-  
-  <button id="sendBtn" onclick="enviar()" disabled>📤 Enviar Bot ZIP</button>
+  <div class="box upload" id="uploadBox">
+    <label for="zipFile">Selecione seu bot ZIP (.zip com main.py + requirements.txt):</label>
+    <input type="file" id="zipFile" accept=".zip" />
+    <button onclick="enviarZip()">📤 Enviar para CordFleet</button>
+    <div id="uploadStatus"></div>
+  </div>
 
-  <div id="status"></div>
-
-  <footer>Feito com 💙 por CordFleet 🚀</footer>
+  <footer>Feito com 💙 por CordFleet • Painel Responsivo e Seguro</footer>
 
   <script>
-    const fileInput = document.getElementById("fileInput");
-    const sendBtn = document.getElementById("sendBtn");
-    const status = document.getElementById("status");
+    const statusEl = document.getElementById("status");
+    const uploadBox = document.getElementById("uploadBox");
+    const authBox = document.getElementById("authBox");
 
-    fileInput.addEventListener("change", () => {
-      status.textContent = "";
-      status.classList.remove("error");
-      if (fileInput.files.length === 0) {
-        sendBtn.disabled = true;
+    function showUpload() {
+      authBox.style.display = "none";
+      uploadBox.style.display = "block";
+    }
+
+    async function login() {
+      const username = document.getElementById("username").value;
+      const password = document.getElementById("password").value;
+      const res = await fetch("/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password })
+      });
+      const txt = await res.text();
+      if (res.ok) {
+        statusEl.textContent = "✅ Login efetuado!";
+        showUpload();
       } else {
-        const file = fileInput.files[0];
-        if (file.name.toLowerCase().endsWith(".zip")) {
-          sendBtn.disabled = false;
-        } else {
-          status.textContent = "❌ Selecione um arquivo com extensão .zip";
-          status.classList.add("error");
-          sendBtn.disabled = true;
-        }
+        statusEl.textContent = "❌ " + txt;
       }
-    });
+    }
 
-    async function enviar() {
-      if (sendBtn.disabled) return;
-
-      const file = fileInput.files[0];
-      if (!file) {
-        status.textContent = "❌ Nenhum arquivo selecionado.";
-        status.classList.add("error");
-        return;
+    async function register() {
+      const username = document.getElementById("username").value;
+      const password = document.getElementById("password").value;
+      const res = await fetch("/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password })
+      });
+      const txt = await res.text();
+      if (res.ok) {
+        statusEl.textContent = "✅ Conta criada!";
+        showUpload();
+      } else {
+        statusEl.textContent = "❌ " + txt;
       }
+    }
 
-      status.textContent = "⏳ Enviando, aguarde...";
-      status.classList.remove("error");
-
+    async function enviarZip() {
+      const file = document.getElementById("zipFile").files[0];
       const formData = new FormData();
       formData.append("zipfile", file);
-
-      try {
-        const res = await fetch("/upload", {
-          method: "POST",
-          body: formData,
-        });
-
-        const texto = await res.text();
-
-        if (res.ok) {
-          status.classList.remove("error");
-          status.innerHTML = "✅ Sucesso!<br>" + texto;
-        } else {
-          status.classList.add("error");
-          status.textContent = "❌ Erro: " + texto;
-        }
-      } catch (err) {
-        status.classList.add("error");
-        status.textContent = "❌ Erro na conexão com o servidor.";
-      }
+      const res = await fetch("/upload", {
+        method: "POST",
+        body: formData
+      });
+      const texto = await res.text();
+      document.getElementById("uploadStatus").textContent = texto;
     }
   </script>
 </body>
