@@ -3,14 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Cordfleet 🚀 | Hospedagem de Bots</title>
+  <title>CordFleet 🚀 | Hospedagem de Bots</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet" />
   <style>
-    /* Reset básico */
     * {
       box-sizing: border-box;
-      margin: 0;
-      padding: 0;
+      margin: 0; padding: 0;
     }
     body {
       font-family: 'Poppins', sans-serif;
@@ -18,12 +16,12 @@
       color: #e0f7e3;
       min-height: 100vh;
       display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 2rem;
       flex-direction: column;
-      text-align: center;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
       user-select: none;
+      text-align: center;
     }
     h1 {
       font-size: 3.5rem;
@@ -39,7 +37,6 @@
       line-height: 1.5;
       color: #a8f9c9cc;
     }
-    /* Custom file input container */
     .file-upload {
       position: relative;
       display: inline-block;
@@ -54,6 +51,7 @@
       font-weight: 600;
       user-select: none;
       box-shadow: inset 0 0 12px #00ffae33;
+      overflow: hidden;
     }
     .file-upload:hover {
       background-color: #00ffae11;
@@ -68,7 +66,6 @@
       opacity: 0;
       cursor: pointer;
     }
-    /* Animated button */
     button {
       margin-top: 1.5rem;
       background: linear-gradient(45deg, #00ffae, #00d995);
@@ -83,6 +80,7 @@
       transition: all 0.3s ease;
       position: relative;
       overflow: hidden;
+      user-select: none;
     }
     button::before {
       content: "";
@@ -109,7 +107,6 @@
       box-shadow: 0 0 25px #00ffaebb;
       transform: scale(1.05);
     }
-    /* Status message */
     #status {
       margin-top: 1.8rem;
       font-size: 1.1rem;
@@ -118,6 +115,9 @@
       color: #00ffae;
       text-shadow: 0 0 8px #00ffaeaa;
       transition: color 0.3s ease;
+      user-select: text;
+      white-space: pre-wrap;
+      max-width: 90vw;
     }
     #status.error {
       color: #ff4c4c;
@@ -132,9 +132,9 @@
   </style>
 </head>
 <body>
-  <h1>Cordfleet 🚀</h1>
+  <h1>CordFleet 🚀</h1>
   <p>
-    Hospede seu bot Python direto na Cordfleet com segurança e facilidade!<br />
+    Hospede seu bot Python direto na CordFleet com segurança e facilidade!<br />
     Envie um arquivo <b>.zip</b> contendo <b>main.py</b> e <b>requirements.txt</b>.<br />
     RAM fixa: <b>150MB</b>.
   </p>
@@ -148,7 +148,7 @@
 
   <div id="status"></div>
 
-  <footer>Feito com 💙 por Cordfleet</footer>
+  <footer>Feito com 💙 por CordFleet 🚀</footer>
 
   <script>
     const fileInput = document.getElementById("fileInput");
@@ -157,6 +157,7 @@
 
     fileInput.addEventListener("change", () => {
       status.textContent = "";
+      status.classList.remove("error");
       if (fileInput.files.length === 0) {
         sendBtn.disabled = true;
       } else {
@@ -197,7 +198,7 @@
 
         if (res.ok) {
           status.classList.remove("error");
-          status.innerHTML = "✅ Sucesso! " + texto;
+          status.innerHTML = "✅ Sucesso!<br>" + texto;
         } else {
           status.classList.add("error");
           status.textContent = "❌ Erro: " + texto;
