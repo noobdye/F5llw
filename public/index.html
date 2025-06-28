@@ -20,14 +20,14 @@
       flex-direction: column;
       align-items: center;
       justify-content: flex-start;
-      padding: 2rem;
-      user-select: none;
+      padding: 2rem 1rem;
     }
     h1 {
-      font-size: 2.8rem;
-      margin: 1rem 0 0.5rem;
+      font-size: 2.5rem;
+      margin-top: 1rem;
       color: #00ffae;
       text-shadow: 0 0 8px #00ffae;
+      text-align: center;
     }
     .box {
       background: #1e2b35;
@@ -35,14 +35,14 @@
       border-radius: 16px;
       box-shadow: 0 0 20px #00ffae55;
       width: 100%;
-      max-width: 500px;
+      max-width: 420px;
       margin-top: 2rem;
       animation: fadeIn 0.6s ease;
     }
     input, button {
       width: 100%;
-      padding: 0.8rem;
-      margin: 0.5rem 0;
+      padding: 0.9rem;
+      margin-top: 0.6rem;
       border-radius: 8px;
       border: none;
       font-size: 1rem;
@@ -57,7 +57,7 @@
       color: #000;
       font-weight: bold;
       cursor: pointer;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      transition: all 0.3s ease;
     }
     button:hover {
       transform: scale(1.03);
@@ -68,65 +68,71 @@
       display: none;
     }
     label {
-      display: block;
       margin-top: 1rem;
+      display: block;
       font-weight: bold;
+      color: #ccc;
     }
     .oauth {
       margin-top: 1rem;
       display: flex;
-      justify-content: space-between;
-      gap: 1rem;
+      flex-direction: column;
+      gap: 0.6rem;
     }
-    .oauth button {
-      flex: 1;
+    .oauth button.discord {
       background: #5865F2;
       color: #fff;
     }
     .oauth button.google {
       background: #DB4437;
+      color: #fff;
     }
-    #status {
+    #status, #uploadStatus {
       margin-top: 1rem;
-      min-height: 1rem;
       text-align: center;
       font-weight: bold;
+      min-height: 20px;
     }
     footer {
       margin-top: auto;
-      padding-top: 2rem;
-      font-size: 0.9rem;
-      color: #aaa;
+      padding: 2rem 0 1rem;
+      font-size: 0.85rem;
       text-align: center;
+      color: #aaa;
     }
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
     }
+    @media (max-width: 500px) {
+      h1 { font-size: 2rem; }
+      .box { padding: 1.5rem; }
+    }
   </style>
 </head>
 <body>
   <h1>CordFleet 🚀</h1>
+
   <div class="box" id="authBox">
     <input type="text" id="username" placeholder="Usuário" />
     <input type="password" id="password" placeholder="Senha" />
     <button onclick="login()">🔓 Entrar</button>
     <button onclick="register()">📝 Registrar</button>
     <div class="oauth">
-      <button onclick="location.href='/auth/discord'">Login Discord</button>
-      <button class="google" onclick="location.href='/auth/google'">Login Google</button>
+      <button class="discord" onclick="location.href='/auth/discord'">Entrar com Discord</button>
+      <button class="google" onclick="location.href='/auth/google'">Entrar com Google</button>
     </div>
     <div id="status"></div>
   </div>
 
   <div class="box upload" id="uploadBox">
-    <label for="zipFile">Selecione seu bot ZIP (.zip com main.py + requirements.txt):</label>
+    <label for="zipFile">Seu bot ZIP (.zip com main.py + requirements.txt):</label>
     <input type="file" id="zipFile" accept=".zip" />
     <button onclick="enviarZip()">📤 Enviar para CordFleet</button>
     <div id="uploadStatus"></div>
   </div>
 
-  <footer>Feito com 💙 por CordFleet • Painel Responsivo e Seguro</footer>
+  <footer>Feito com 💙 por CordFleet — Seguro e responsivo</footer>
 
   <script>
     const statusEl = document.getElementById("status");
@@ -174,14 +180,18 @@
 
     async function enviarZip() {
       const file = document.getElementById("zipFile").files[0];
+      if (!file || !file.name.endsWith(".zip")) {
+        alert("Selecione um arquivo ZIP válido!");
+        return;
+      }
       const formData = new FormData();
       formData.append("zipfile", file);
       const res = await fetch("/upload", {
         method: "POST",
         body: formData
       });
-      const texto = await res.text();
-      document.getElementById("uploadStatus").textContent = texto;
+      const txt = await res.text();
+      document.getElementById("uploadStatus").textContent = txt;
     }
   </script>
 </body>
